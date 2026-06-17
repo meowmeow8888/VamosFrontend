@@ -1,16 +1,23 @@
-import { Coins, UserRoundPen, Diff } from "lucide-react";
-import { use, useEffect, useRef, useState } from "react";
+import { Coins, UserRoundPen, Diff, Plus, Minus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface MoneyTraderProps {
   name: string;
   balance: number;
+  onNameChange: (newName: string) => void;
+  onBalanceChange: (balanceChange: number) => void;
 }
 
-export const MoneyTrader: React.FC<MoneyTraderProps> = ({ name, balance }) => {
-  const [selected, setSelected] = useState(false);
+export const MoneyTrader: React.FC<MoneyTraderProps> = ({
+  name,
+  balance,
+  onNameChange,
+  onBalanceChange,
+}) => {
   const [open, setOpen] = useState(false);
   const [enableEdit, setEnableEdit] = useState(false);
   const [balanceColor, setBalanceColor] = useState("");
+  const [balanceChange, setBalanceChange] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -22,16 +29,12 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({ name, balance }) => {
   useEffect(() => {
     if (enableEdit) {
       inputRef.current?.focus();
-      inputRef.current?.select();
     }
   }, [enableEdit]);
 
   return (
-    <div>
-      <div
-        className="flex flex-row justify-center items-center
-    bg-gray-500 p-3 w-86 h-12 gap-2 rounded-xl"
-      >
+    <div className="flex flex-col bg-gray-500 p-3 w-86 h-fit gap-2 rounded-xl">
+      <div className="flex flex-row justify-center items-center">
         <div className="flex flex-row gap-2 mr-auto">
           <UserRoundPen
             className="transition-all active:scale-95 active:opacity-60"
@@ -44,6 +47,7 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({ name, balance }) => {
               className="size-full text-lg border-none outline-1 outline-white rounded-md p-1"
               value={name}
               ref={inputRef}
+              onChange={(e) => onNameChange(e.target.value)}
               onBlur={() => {
                 setEnableEdit(false);
               }}
@@ -60,15 +64,36 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({ name, balance }) => {
         <div className="flex flex-row gap-2">
           <Coins></Coins>
           <p className={`text-lg ${balanceColor}`}>{balance}₪</p>
-          <Diff></Diff>
+          <Diff
+            onClick={() => {
+              setOpen((e) => !e);
+            }}
+            className="transition-all active:scale-95 active:opacity-60"
+          ></Diff>
         </div>
       </div>
       {open && (
-        <input
-          type="number"
-          placeholder={selected ? "0.00" : ""}
-          className="w-24 p-1 border-none outline-1 outline-gray-300 focus:outline-white rounded-sm"
-        ></input>
+        <div className="flex flex-row justify-center gap-4">
+          <Plus
+            onClick={() => {
+              onBalanceChange(balanceChange);
+            }}
+            className="transition-all active:scale-95 active:opacity-60"
+          ></Plus>
+          <input
+            value={balanceChange === 0 ? "" : balanceChange}
+            placeholder="0"
+            onChange={e => setBalanceChange(parseFloat(e.target.value))}
+            type="number"
+            className="w-24 p-1 border-none outline-1 outline-gray-300 focus:outline-white rounded-sm"
+          ></input>
+          <Minus
+            onClick={() => {
+              onBalanceChange(-balanceChange);
+            }}
+            className="transition-all active:scale-95 active:opacity-60"
+          ></Minus>
+        </div>
       )}
     </div>
   );
