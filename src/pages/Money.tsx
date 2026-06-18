@@ -9,11 +9,9 @@ interface Friend {
   balance: number;
 }
 
-type TxType = "send" | "receive";
-
 interface Transaction {
-  type: TxType;
-  friendId: number;
+  senderId: number;
+  receiverId: number;
   amount: number;
 }
 
@@ -21,6 +19,7 @@ function Money() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [txQueue, setTxQueue] = useState<Transaction[]>([]);
   const username = "Guy Mosseri";
+  const [myId, setMyId] = useState(0)
 
   const getFriends = async () => {
     const res = await fetch(
@@ -33,20 +32,29 @@ function Money() {
       }),
     );
   };
+  
+  const getMyId = async () => {
+    const res = await fetch(
+      `${BASE_URL}/api/id?name=${encodeURIComponent(username)}`,
+    );
+    const data = await res.json();
+    setMyId(data.id)
+  }
 
   const commitTransactions = async () => {
     const queue = txQueue;
 
     for (const tx of queue) {
+      console.log(tx)
       try {
         await fetch(
-          `${BASE_URL}/api/transactions?name=${encodeURIComponent(username)}`,
+          `${BASE_URL}/api/transactions`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ tx }),
+            body: JSON.stringify(tx),
           },
         );
       } catch (e) {
@@ -64,27 +72,27 @@ function Money() {
   };
 
   const updateBalance = (index: number, balanceChange: number) => {
-    let friendId: number = 0
     setFriends((prev) =>
       prev.map((friend, i) => {
         if (i === index) {
-          friendId = friend.id
+          const newTx: Transaction = {
+          senderId: myId,
+          receiverId: friend.id,
+          amount: Math.abs(balanceChange),
+          };
+          setTxQueue((prev) => [...prev, newTx]);
           return { ...friend, balance: friend.balance + balanceChange };
         } else {
           return friend;
         }
       }),
     );
-    const newTx: Transaction = {
-      type: balanceChange > 0 ? "receive" : "send",
-      friendId: friendId,
-      amount: Math.abs(balanceChange),
-    };
-    setTxQueue((prev) => [...prev, newTx]);
+    
   };
 
   useEffect(() => {
     getFriends();
+    getMyId();
   }, []);
 
   useEffect(() => {
