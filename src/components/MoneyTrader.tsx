@@ -19,6 +19,7 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
   const [balanceColor, setBalanceColor] = useState("");
   const [balanceChange, setBalanceChange] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (balance === 0) setBalanceColor("text-white");
@@ -32,8 +33,25 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
     }
   }, [enableEdit]);
 
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleMouseDown);
+
+    return () => {
+      document.removeEventListener("click", handleMouseDown);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col bg-gray-500 p-3 w-86 h-fit gap-2 rounded-xl">
+    <div
+      ref={popupRef}
+      className="flex flex-col bg-gray-500 p-3 w-86 h-fit gap-2 rounded-xl"
+    >
       <div className="flex flex-row justify-center items-center">
         <div className="flex flex-row gap-2 mr-auto">
           <UserRoundPen
@@ -76,7 +94,6 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
         <div className="flex flex-row justify-center gap-4">
           <Plus
             onClick={() => {
-              console.log("+");
               onBalanceChange(balanceChange);
             }}
             className="transition-all active:scale-95 active:opacity-60"
@@ -90,7 +107,6 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
           ></input>
           <Minus
             onClick={() => {
-              console.log("-");
               onBalanceChange(-balanceChange);
             }}
             className="transition-all active:scale-95 active:opacity-60"

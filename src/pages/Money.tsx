@@ -102,7 +102,6 @@ function Money() {
             balance={friend.balance}
             onNameChange={(newName) => handleNameChange(index, newName)}
             onBalanceChange={(balanceChange) => {
-              console.log("balance change", balanceChange);
               updateBalance(index, balanceChange);
             }}
           ></MoneyTrader>
