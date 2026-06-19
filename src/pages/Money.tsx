@@ -19,7 +19,7 @@ function Money() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [txQueue, setTxQueue] = useState<Transaction[]>([]);
   const username = "Guy Mosseri";
-  const [myId, setMyId] = useState(0)
+  const [myId, setMyId] = useState(0);
 
   const getFriends = async () => {
     const res = await fetch(
@@ -32,34 +32,26 @@ function Money() {
       }),
     );
   };
-  
+
   const getMyId = async () => {
     const res = await fetch(
       `${BASE_URL}/api/id?name=${encodeURIComponent(username)}`,
     );
     const data = await res.json();
-    setMyId(data.id)
-  }
+    setMyId(data.id);
+  };
 
   const commitTransactions = async () => {
-    const queue = txQueue;
-
-    for (const tx of queue) {
-      console.log(tx)
-      try {
-        await fetch(
-          `${BASE_URL}/api/transactions`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(tx),
-          },
-        );
-      } catch (e) {
-        break;
-      }
+    const tx = txQueue[0];
+    if (tx) {
+      await fetch(`${BASE_URL}/api/transactions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tx),
+      });
+      setTxQueue((prev) => prev.slice(1));
     }
   };
 
@@ -76,9 +68,9 @@ function Money() {
       prev.map((friend, i) => {
         if (i === index) {
           const newTx: Transaction = {
-          senderId: myId,
-          receiverId: friend.id,
-          amount: Math.abs(balanceChange),
+            senderId: myId,
+            receiverId: friend.id,
+            amount: balanceChange,
           };
           setTxQueue((prev) => [...prev, newTx]);
           return { ...friend, balance: friend.balance + balanceChange };
@@ -87,10 +79,10 @@ function Money() {
         }
       }),
     );
-    
   };
 
   useEffect(() => {
+    if (!username) return;
     getFriends();
     getMyId();
   }, []);
@@ -109,9 +101,10 @@ function Money() {
             name={friend.name}
             balance={friend.balance}
             onNameChange={(newName) => handleNameChange(index, newName)}
-            onBalanceChange={(balanceChange) =>
-              updateBalance(index, balanceChange)
-            }
+            onBalanceChange={(balanceChange) => {
+              console.log("balance change", balanceChange);
+              updateBalance(index, balanceChange);
+            }}
           ></MoneyTrader>
         ))}
       </div>

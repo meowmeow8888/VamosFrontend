@@ -76,6 +76,7 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
         <div className="flex flex-row justify-center gap-4">
           <Plus
             onClick={() => {
+              console.log("+");
               onBalanceChange(balanceChange);
             }}
             className="transition-all active:scale-95 active:opacity-60"
@@ -83,12 +84,13 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
           <input
             value={balanceChange === 0 ? "" : balanceChange}
             placeholder="0"
-            onChange={e => setBalanceChange(parseFloat(e.target.value))}
+            onChange={(e) => setBalanceChange(parseFloat(e.target.value))}
             type="number"
             className="w-24 p-1 border-none outline-1 outline-gray-300 focus:outline-white rounded-sm"
           ></input>
           <Minus
             onClick={() => {
+              console.log("-");
               onBalanceChange(-balanceChange);
             }}
             className="transition-all active:scale-95 active:opacity-60"
