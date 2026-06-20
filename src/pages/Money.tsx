@@ -7,6 +7,7 @@ interface Friend {
   id: number;
   name: string;
   balance: number;
+  nickname: string;
 }
 
 interface Transaction {
@@ -28,7 +29,12 @@ function Money() {
     const data = await res.json();
     setFriends(
       data.friends.map((friend: Friend) => {
-        return { id: friend.id, name: friend.name, balance: friend.balance };
+        return {
+          id: friend.id,
+          name: friend.name,
+          balance: friend.balance,
+          nickname: friend.nickname,
+        };
       }),
     );
   };
@@ -58,9 +64,19 @@ function Money() {
   const handleNameChange = (index: number, newName: string) => {
     setFriends((prev) =>
       prev.map((friend, i) =>
-        i === index ? { ...friend, name: newName } : friend,
+        i === index ? { ...friend, nickname: newName } : friend,
       ),
     );
+  };
+
+  const sendNickname = async (index: number) => {
+    await fetch(`${BASE_URL}/api/nickname`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({nickerId: myId, nickedId: friends.at(index)?.id, nickname: friends.at(index)?.nickname}),
+    });
   };
 
   const updateBalance = (index: number, balanceChange: number) => {
@@ -98,12 +114,13 @@ function Money() {
         {friends.map((friend, index) => (
           <MoneyTrader
             key={index}
-            name={friend.name}
+            name={friend.nickname !== "" ? friend.nickname : friend.name}
             balance={friend.balance}
             onNameChange={(newName) => handleNameChange(index, newName)}
             onBalanceChange={(balanceChange) => {
               updateBalance(index, balanceChange);
             }}
+            sendNickname={() => sendNickname(index)}
           ></MoneyTrader>
         ))}
       </div>

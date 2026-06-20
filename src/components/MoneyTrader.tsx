@@ -6,6 +6,7 @@ interface MoneyTraderProps {
   balance: number;
   onNameChange: (newName: string) => void;
   onBalanceChange: (balanceChange: number) => void;
+  sendNickname: () => void;
 }
 
 export const MoneyTrader: React.FC<MoneyTraderProps> = ({
@@ -13,9 +14,11 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
   balance,
   onNameChange,
   onBalanceChange,
+  sendNickname,
 }) => {
   const [open, setOpen] = useState(false);
   const [enableEdit, setEnableEdit] = useState(false);
+  const [nicknameChanged, setNicknameChanged] = useState(false);
   const [balanceColor, setBalanceColor] = useState("");
   const [balanceChange, setBalanceChange] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -65,13 +68,24 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
               className="size-full text-lg border-none outline-1 outline-white rounded-md p-1"
               value={name}
               ref={inputRef}
-              onChange={(e) => onNameChange(e.target.value)}
+              onChange={(e) => {
+                onNameChange(e.target.value);
+                setNicknameChanged(true);
+              }}
               onBlur={() => {
                 setEnableEdit(false);
+                if (nicknameChanged) {
+                  sendNickname();
+                }
+                setNicknameChanged(false);
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   setEnableEdit(false);
+                  if (nicknameChanged) {
+                    sendNickname();
+                  }
+                  setNicknameChanged(false);
                 }
               }}
             ></input>
