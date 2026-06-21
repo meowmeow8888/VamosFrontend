@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import MenuBar from "../components/menuBar";
-import { MoneyTrader } from "../components/MoneyTrader";
+import { MoneyTrader } from "../components/Money/MoneyTrader";
 import { BASE_URL } from "../utils/constants";
 
 interface Friend {

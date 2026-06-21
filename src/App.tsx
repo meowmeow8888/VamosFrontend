@@ -9,7 +9,7 @@ import Restaurant from "./pages/Restaurant";
 function App() {
   const navigation = useNavigate();
   useEffect(() => {
-    navigation("/money");
+    navigation("/home");
   }, []);
 
   return (
