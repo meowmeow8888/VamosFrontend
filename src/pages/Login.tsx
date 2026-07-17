@@ -6,10 +6,11 @@ function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const isDisabled = !(name !== "" && password !== "");
+  const [error, setError] = useState("");
   const { refreshSession } = useAuth();
 
   const handleLogin = async () => {
-    await fetch(`${BASE_URL}/api/login`, {
+    const res = await fetch(`${BASE_URL}/api/login`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -17,6 +18,11 @@ function Login() {
       },
       body: JSON.stringify({ name: name, password: password }),
     });
+    if (res.status === 401) {
+      setError("Invalid username or password. Please try again.");
+      return;
+    }
+    setError("");
     refreshSession();
   };
 
@@ -34,6 +40,11 @@ function Login() {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !isDisabled) {
+            handleLogin();
+          }
+        }}
       ></input>
       <button
         className="bg-blue-600 m-2 py-2 px-6 rounded-xl active:bg-blue-500 transition-colors disabled:bg-gray-700"
@@ -42,6 +53,7 @@ function Login() {
       >
         Login
       </button>
+      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
     </div>
   );
 }

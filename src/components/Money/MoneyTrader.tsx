@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 interface MoneyTraderProps {
   name: string;
   balance: number;
+  enableEdit: boolean;
+  setEnableEdit: (value: boolean) => void;
   onNameChange: (newName: string) => void;
   onBalanceChange: (balanceChange: number) => void;
   sendNickname: () => void;
@@ -12,12 +14,13 @@ interface MoneyTraderProps {
 export const MoneyTrader: React.FC<MoneyTraderProps> = ({
   name,
   balance,
+  enableEdit,
+  setEnableEdit,
   onNameChange,
   onBalanceChange,
   sendNickname,
 }) => {
   const [open, setOpen] = useState(false);
-  const [enableEdit, setEnableEdit] = useState(false);
   const [nicknameChanged, setNicknameChanged] = useState(false);
   const [balanceColor, setBalanceColor] = useState("");
   const [balanceChange, setBalanceChange] = useState(0);

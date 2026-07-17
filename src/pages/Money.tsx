@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import MenuBar from "../components/menuBar";
 import { MoneyTrader } from "../components/Money/MoneyTrader";
 import { BASE_URL } from "../utils/constants";
+import { useAuth } from "../providers/AuthProvider";
 
 export interface Friend {
   id: number;
@@ -11,7 +12,7 @@ export interface Friend {
 }
 
 interface Transaction {
-  senderId: number;
+  senderId: number | null;
   receiverId: number;
   amount: number;
 }
@@ -19,13 +20,13 @@ interface Transaction {
 function Money() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [txQueue, setTxQueue] = useState<Transaction[]>([]);
-  const username = "Guy Mosseri";
-  const [myId, setMyId] = useState(0);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const { userId } = useAuth();
 
   const getFriends = async () => {
-    const res = await fetch(
-      `${BASE_URL}/api/friends?name=${encodeURIComponent(username)}`,
-    );
+    const res = await fetch(`${BASE_URL}/api/friends`, {
+      credentials: "include",
+    });
     const data = await res.json();
     setFriends(
       data.friends.map((friend: Friend) => {
@@ -39,19 +40,12 @@ function Money() {
     );
   };
 
-  const getMyId = async () => {
-    const res = await fetch(
-      `${BASE_URL}/api/id?name=${encodeURIComponent(username)}`,
-    );
-    const data = await res.json();
-    setMyId(data.id);
-  };
-
   const commitTransactions = async () => {
     const tx = txQueue[0];
     if (tx) {
       await fetch(`${BASE_URL}/api/transactions`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -72,10 +66,15 @@ function Money() {
   const sendNickname = async (index: number) => {
     await fetch(`${BASE_URL}/api/nickname`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({nickerId: myId, nickedId: friends.at(index)?.id, nickname: friends.at(index)?.nickname}),
+      body: JSON.stringify({
+        nickerId: userId,
+        nickedId: friends.at(index)?.id,
+        nickname: friends.at(index)?.nickname,
+      }),
     });
   };
 
@@ -84,7 +83,7 @@ function Money() {
       prev.map((friend, i) => {
         if (i === index) {
           const newTx: Transaction = {
-            senderId: myId,
+            senderId: userId,
             receiverId: friend.id,
             amount: balanceChange,
           };
@@ -98,9 +97,7 @@ function Money() {
   };
 
   useEffect(() => {
-    if (!username) return;
     getFriends();
-    getMyId();
   }, []);
 
   useEffect(() => {
@@ -113,9 +110,17 @@ function Money() {
       <div className="flex flex-col items-center mt-6 gap-y-4">
         {friends.map((friend, index) => (
           <MoneyTrader
-            key={index}
-            name={friend.nickname !== "" ? friend.nickname : friend.name}
+            key={friend.id}
+            name={
+              friend.nickname === "" && editingIndex !== index
+                ? friend.name
+                : friend.nickname
+            }
             balance={friend.balance}
+            enableEdit={editingIndex === index}
+            setEnableEdit={(value) => {
+              setEditingIndex(value ? index : null);
+            }}
             onNameChange={(newName) => handleNameChange(index, newName)}
             onBalanceChange={(balanceChange) => {
               updateBalance(index, balanceChange);
