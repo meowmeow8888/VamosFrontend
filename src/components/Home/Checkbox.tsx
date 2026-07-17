@@ -17,14 +17,11 @@ const iconMap = {
   awake: AlarmClockCheck,
   ready: BadgeCheck,
   alive: HeartPulse,
-  checked: SquareCheckBig,
-  unchecked: Square,
 } as const;
 
 export const Checkbox: React.FC<CheckboxProps> = ({ type, time }) => {
   const Icon = iconMap[type];
   const [checked, setChecked] = useState(false);
-  const checkStatus: CheckboxType = checked ? "checked" : "unchecked";
 
   return (
     <>
