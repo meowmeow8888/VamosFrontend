@@ -1,10 +1,10 @@
 import MenuBar from "../components/menuBar";
 
-function Location() {
+function Information() {
   return <div className="w-screen h-screen">
     <div className="">Hi Horesh</div>
     <MenuBar></MenuBar>
   </div>
 }
 
-export default Location;
+export default Information;

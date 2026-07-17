@@ -98,7 +98,7 @@ export const MoneyTrader: React.FC<MoneyTraderProps> = ({
         </div>
         <div className="flex flex-row gap-2">
           <Coins></Coins>
-          <p className={`text-lg ${balanceColor}`}>{balance}₪</p>
+          <p className={`text-lg ${balanceColor}`}>{balance.toFixed(1)}₪</p>
           <Diff
             onClick={() => {
               setOpen((e) => !e);

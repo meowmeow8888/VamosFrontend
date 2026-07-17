@@ -1,6 +1,6 @@
 import {
   HandCoins,
-  MapPin,
+  BadgeInfo,
   HomeIcon,
   AlarmClock,
   Utensils,
@@ -14,12 +14,12 @@ function MenuBar() {
 
   return (
     <div className="flex flex-row justify-center fixed bottom-0 left-0 w-full h-14">
-      <MapPin
+      <BadgeInfo
         className={iconStyle}
         onClick={() => {
-          nav("/location");
+          nav("/information");
         }}
-      ></MapPin>
+      ></BadgeInfo>
       <HandCoins
         className={iconStyle}
         onClick={() => {

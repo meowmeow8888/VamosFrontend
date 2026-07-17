@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Info, LogOut } from "lucide-react";
 import { Checkbox } from "../components/Home/Checkbox";
 import MenuBar from "../components/menuBar";
