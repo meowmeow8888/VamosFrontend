@@ -1,12 +1,12 @@
-import type {Friend} from "../../pages/Money";
+// import type {Friend} from "../../pages/Money";
 
-interface GroupProps {
-  name: string;
-  friendsList: Friend[];
-}
+// interface GroupProps {
+//   name: string;
+//   friendsList: Friend[];
+// }
 
-export const Group: React.FC<GroupProps> = ({ name, friendsList }) => {
-  return <>
-    <p>{name}</p>
-  </>;
-};
+// export const Group: React.FC<GroupProps> = ({ name, friendsList }) => {
+//   return <>
+//     <p>{name}</p>
+//   </>;
+// };
