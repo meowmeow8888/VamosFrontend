@@ -25,7 +25,7 @@ function AppRoutes() {
   const { isLoggedIn, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <AppShell />;
   }
 
   if (!isLoggedIn) {
