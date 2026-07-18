@@ -14,7 +14,14 @@ const AuthContext = createContext<AuthContextType>(null!);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<number | null>(() => {
+    const saved = localStorage.getItem("userId");
+
+    return saved ? JSON.parse(saved) : [];
+  });
+  useEffect(() => {
+    localStorage.setItem("userId", JSON.stringify(userId));
+  }, [userId]);
 
   const refreshSession = async () => {
     try {
@@ -31,8 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUserId(null);
       }
     } catch {
-      setIsLoggedIn(false);
-      setUserId(null);
+      setIsLoggedIn(true);
     } finally {
       setLoading(false);
     }
