@@ -52,11 +52,7 @@ function Information() {
 
   return (
     <div className="">
-      <div
-        className={`h-[calc(100vh-6rem)] m-8 p-2 rounded-2xl transition-all duration-300 ease-in-out ${
-          enableEdit ? "outline-2 bg-gray-700" : "bg-gray-500"
-        }`}
-      >
+      <div className="h-[calc(100vh-6rem)]">
         <div
           className="size-10 fixed right-5 top-5 z-50 rounded-2xl bg-white"
           onClick={() => setEnableEdit((p) => !p)}
@@ -75,7 +71,11 @@ function Information() {
             }`}
           />
         </div>
-        <div className="flex flex-col h-full overflow-auto">
+        <div
+          className={`flex flex-col h-full overflow-auto m-8 p-2 rounded-2xl transition-all duration-300 ease-in-out ${
+            enableEdit ? "outline-2 bg-gray-700" : "bg-gray-500"
+          }`}
+        >
           {lines.map((line, index) =>
             enableEdit && index === editingIndex ? (
               <input
