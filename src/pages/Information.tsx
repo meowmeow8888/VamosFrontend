@@ -5,44 +5,45 @@ import { Pencil, Save } from "lucide-react";
 function Information() {
   const [enableEdit, setEnableEdit] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const defaultLines = [
+    "meow",
+    "bla",
+    "",
+    "meow",
+    "meow",
+    "bla",
+    "",
+    "meow",
+    "meow",
+    "bla",
+    "",
+    "meow",
+    "meow",
+    "bla",
+    "",
+    "meow",
+    "meow",
+    "bla",
+    "",
+    "meow",
+    "meow",
+    "bla",
+    "",
+    "meow",
+    "meow",
+    "bla",
+    "",
+    "meow",
+    "meow",
+    "bla",
+    "",
+    "meow",
+  ];
   const [lines, setLines] = useState<string[]>(() => {
     const saved = localStorage.getItem("lines");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          "meow",
-          "bla",
-          "",
-          "meow",
-          "meow",
-          "bla",
-          "",
-          "meow",
-          "meow",
-          "bla",
-          "",
-          "meow",
-          "meow",
-          "bla",
-          "",
-          "meow",
-          "meow",
-          "bla",
-          "",
-          "meow",
-          "meow",
-          "bla",
-          "",
-          "meow",
-          "meow",
-          "bla",
-          "",
-          "meow",
-          "meow",
-          "bla",
-          "",
-          "meow",
-        ];
+    if (!saved) return defaultLines;
+    const parsed: string[] = JSON.parse(saved);
+    return parsed.length === 0 ? defaultLines : parsed;
   });
 
   useEffect(() => {
