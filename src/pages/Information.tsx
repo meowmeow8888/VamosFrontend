@@ -51,9 +51,9 @@ function Information() {
   }, [lines]);
 
   return (
-    <div className="h-[calc(100vh-6rem)] m-8 pb-12">
+    <div className="">
       <div
-        className={`h-full p-2 rounded-2xl transition-all duration-300 ease-in-out ${
+        className={`h-[calc(100vh-6rem)] m-8 p-2 rounded-2xl transition-all duration-300 ease-in-out ${
           enableEdit ? "outline-2 bg-gray-700" : "bg-gray-500"
         }`}
       >
