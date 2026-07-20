@@ -7,7 +7,42 @@ function Information() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [lines, setLines] = useState<string[]>(() => {
     const saved = localStorage.getItem("lines");
-    return saved ? JSON.parse(saved) : [];
+    return saved
+      ? JSON.parse(saved)
+      : [
+          "meow",
+          "bla",
+          "",
+          "meow",
+          "meow",
+          "bla",
+          "",
+          "meow",
+          "meow",
+          "bla",
+          "",
+          "meow",
+          "meow",
+          "bla",
+          "",
+          "meow",
+          "meow",
+          "bla",
+          "",
+          "meow",
+          "meow",
+          "bla",
+          "",
+          "meow",
+          "meow",
+          "bla",
+          "",
+          "meow",
+          "meow",
+          "bla",
+          "",
+          "meow",
+        ];
   });
 
   useEffect(() => {
