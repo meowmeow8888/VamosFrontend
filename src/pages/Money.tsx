@@ -126,7 +126,7 @@ function Money() {
 
   return (
     <>
-      <div className="h-[calc(100vh-6rem)] overflow-y-auto">
+      <div className="h-[calc(100vh-3.5rem)] overflow-y-auto pb-12">
         <div className="flex flex-row justify-between items-center m-4 ">
           <History className="bg-gray-500 rounded-2xl p-2 size-12"></History>
           <div className="flex flex-row items-center bg-gray-500 rounded-2xl p-2 gap-2">
