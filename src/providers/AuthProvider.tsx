@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
+import { useNotifications } from "../hooks/useNotifications";
 
 type AuthContextType = {
   isLoggedIn: boolean;
@@ -12,6 +13,8 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>(null!);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { token } = useNotifications();
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(() => {
@@ -19,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return saved ? JSON.parse(saved) : [];
   });
+
   useEffect(() => {
     localStorage.setItem("userId", JSON.stringify(userId));
   }, [userId]);
@@ -27,6 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${BASE_URL}/api/me`, {
         credentials: "include",
+        body: JSON.stringify({ token: token }),
       });
 
       if (res.ok) {
