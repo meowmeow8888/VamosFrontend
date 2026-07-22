@@ -24,6 +24,7 @@ function Login() {
     }
     setError("");
     refreshSession();
+    console.log("after /me")
   };
 
   return (

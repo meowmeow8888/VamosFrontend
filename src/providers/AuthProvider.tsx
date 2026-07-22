@@ -28,6 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [userId]);
 
   const refreshSession = async () => {
+    console.log("inside /me");
     try {
       const res = await fetch(`${BASE_URL}/api/me`, {
         credentials: "include",
@@ -43,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUserId(null);
       }
     } catch {
-      setIsLoggedIn(true);
+      setIsLoggedIn(false);
     } finally {
       setLoading(false);
     }
