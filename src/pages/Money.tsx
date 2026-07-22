@@ -23,7 +23,16 @@ function Money() {
   const [friends, setFriends] = useState<Friend[]>(() => {
     const saved = localStorage.getItem("friends");
 
-    return saved ? JSON.parse(saved) : [];
+    if (!saved || saved === "undefined") {
+      return [];
+    }
+
+    try {
+      return JSON.parse(saved);
+    } catch (error) {
+      console.error("Failed to parse friends from localStorage:", error);
+      return [];
+    }
   });
   const [txQueue, setTxQueue] = useState<Transaction[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);

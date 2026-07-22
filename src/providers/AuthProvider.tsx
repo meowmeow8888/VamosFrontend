@@ -20,7 +20,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userId, setUserId] = useState<number | null>(() => {
     const saved = localStorage.getItem("userId");
 
-    return saved ? JSON.parse(saved) : null;
+    if (!saved || saved === "undefined") {
+      return null;
+    }
+
+    try {
+      return JSON.parse(saved);
+    } catch (error) {
+      console.error("Failed to parse userId from localStorage:", error);
+      return null;
+    }
   });
 
   useEffect(() => {
@@ -33,7 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         credentials: "include",
         headers: {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ token: token }),
       });
