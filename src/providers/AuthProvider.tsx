@@ -20,7 +20,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userId, setUserId] = useState<number | null>(() => {
     const saved = localStorage.getItem("userId");
 
-    return saved ? JSON.parse(saved) : [];
+    return saved ? JSON.parse(saved) : null;
   });
 
   useEffect(() => {
