@@ -41,9 +41,18 @@ function Information() {
   ];
   const [lines, setLines] = useState<string[]>(() => {
     const saved = localStorage.getItem("lines");
-    if (!saved) return defaultLines;
-    const parsed: string[] = JSON.parse(saved);
-    return parsed.length === 0 ? defaultLines : parsed;
+
+    if (!saved || saved === "undefined") {
+      return defaultLines;
+    }
+
+    try {
+      const parsed: string[] = JSON.parse(saved);
+      return parsed.length === 0 ? defaultLines : parsed;
+    } catch (error) {
+      console.error("Failed to parse saved lines from localStorage:", error);
+      return defaultLines;
+    }
   });
 
   useEffect(() => {
