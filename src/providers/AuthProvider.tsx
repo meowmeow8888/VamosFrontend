@@ -28,10 +28,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [userId]);
 
   const refreshSession = async () => {
-    console.log("inside /me");
     try {
       const res = await fetch(`${BASE_URL}/api/me`, {
+        method: "POST",
         credentials: "include",
+        headers: {
+          "Content-Type": "application/json", 
+        },
         body: JSON.stringify({ token: token }),
       });
 
