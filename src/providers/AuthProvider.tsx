@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (isLoggedIn && token) {
       fetch(`${BASE_URL}/api/device-token`, {
         method: "POST",
-        credentials: "include", // Ensures backend knows WHICH user is sending this
+        credentials: "include", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
       }).catch((err) => console.error("Failed to sync device token:", err));
