@@ -73,7 +73,7 @@ function Money() {
   const commitTransactions = async () => {
     const tx = txQueue[0];
     if (tx) {
-      await fetch(`${BASE_URL}/api/transactions`, {
+      await fetch(`${BASE_URL}/api/create-transaction`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -109,20 +109,15 @@ function Money() {
   };
 
   const updateBalance = (index: number, balanceChange: number) => {
-    setFriends((prev) =>
-      prev.map((friend, i) => {
-        if (i === index) {
-          const newTx: Transaction = {
-            receiverId: friend.id,
-            amount: balanceChange,
-          };
-          setTxQueue((prev) => [...prev, newTx]);
-          return { ...friend, balance: friend.balance + balanceChange };
-        } else {
-          return friend;
-        }
-      }),
-    );
+    friends.map((friend, i) => {
+      if (i === index) {
+        const newTx: Transaction = {
+          receiverId: friend.id,
+          amount: balanceChange,
+        };
+        setTxQueue((prev) => [...prev, newTx]);
+      }
+    });
   };
 
   useEffect(() => {
