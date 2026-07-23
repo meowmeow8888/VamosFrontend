@@ -14,7 +14,6 @@ export interface Friend {
 }
 
 interface Transaction {
-  senderId: number | null;
   receiverId: number;
   amount: number;
 }
@@ -34,7 +33,20 @@ function Money() {
       return [];
     }
   });
-  const [txQueue, setTxQueue] = useState<Transaction[]>([]);
+  const [txQueue, setTxQueue] = useState<Transaction[]>(() => {
+    const saved = localStorage.getItem("txQueue");
+
+    if (!saved || saved === "undefined") {
+      return [];
+    }
+
+    try {
+      return JSON.parse(saved);
+    } catch (error) {
+      console.error("Failed to parse friends from localStorage:", error);
+      return [];
+    }
+  });
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [totalBalanceColor, setTotalBalanceColor] = useState("");
   const totalBalance = useMemo(() => {
@@ -101,7 +113,6 @@ function Money() {
       prev.map((friend, i) => {
         if (i === index) {
           const newTx: Transaction = {
-            senderId: userId,
             receiverId: friend.id,
             amount: balanceChange,
           };
@@ -129,6 +140,7 @@ function Money() {
   }, [friends]);
 
   useEffect(() => {
+    localStorage.setItem("txQueue", JSON.stringify(txQueue));
     if (txQueue.length === 0) return;
     commitTransactions();
   }, [txQueue]);
