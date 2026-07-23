@@ -19,11 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(() => {
     const saved = localStorage.getItem("userId");
-
-    if (!saved || saved === "undefined") {
-      return null;
-    }
-
+    if (!saved || saved === "undefined") return null;
     try {
       return JSON.parse(saved);
     } catch (error) {
@@ -44,7 +40,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token: token }),
       });
 
       if (res.ok) {
@@ -61,6 +56,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn && token) {
+      fetch(`${BASE_URL}/api/device-token`, {
+        method: "POST",
+        credentials: "include", // Ensures backend knows WHICH user is sending this
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      }).catch((err) => console.error("Failed to sync device token:", err));
+    }
+  }, [isLoggedIn, token]);
 
   const logout = async () => {
     await fetch(`${BASE_URL}/api/logout`, {
